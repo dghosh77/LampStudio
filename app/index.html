@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111111"><title>Lamp Studio</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <a class="brand" href="#"><span class="brand-mark">l<span> / </span>s</span><span>LAMP<br>STUDIO</span></a>
+  
+  <a class="nav active" href="#studio">Studio </a>
+  <a class="nav" href="#library">Library</a>
+
+</aside>
+<main id="studio">
+<header><div class="header-right"><span id="connectionBadge" class="badge"> Audio preview</span><label class="sr-only" for="transport">Connection</label><select id="transport"><option value="usb">USB</option><option value="ble">Bluetooth</option></select><button id="connect" class="button small">Connect </button></div></header>
+<div class="page-intro"><div><h1>Lamp control</h1></div><span id="sessionState" hidden></span></div>
+<div class="workspace-grid">
+<section class="panel player">
+ <div class="panel-top"><span class="eyebrow">Music</span><button id="addMusic" class="text-button">Add music</button><input type="file" id="fileInput" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" multiple hidden></div>
+ <div class="now-playing"><div class="cover"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="44"/><circle cx="60" cy="60" r="34"/><circle cx="60" cy="60" r="24"/><circle cx="60" cy="60" r="6"/></svg></div><div class="track-meta"><span class="eyebrow" id="trackType" hidden>BUILT-IN SOUND CHECK</span><h2 id="trackTitle">Studio pulse</h2><p id="trackSubtitle" hidden>An original 24-second loop / 100 BPM</p></div><button class="icon-button" id="repeat" aria-label="Repeat track" aria-pressed="false" title="Repeat track">↻</button></div>
+ <div class="waveform-wrap"><canvas id="waveform" aria-hidden="true"></canvas><div class="waveform-empty" id="waveHint"></div></div>
+ <label class="sr-only" for="seek">Track position</label><input type="range" id="seek" class="seek" min="0" max="1000" value="0" step="1"><div class="time-row mono"><span id="elapsed">0:00</span><span id="duration">0:24</span></div>
+ <div class="transport"><span class="transport-caption mono" id="playbackLabel" hidden>LOCAL AUDIO</span><div class="play-controls"><button class="icon-button" id="previous" aria-label="Previous track">Ⅰ◀</button><button class="play-button" id="play" aria-label="Play">▶</button><button class="icon-button" id="next" aria-label="Next track">▶Ⅰ</button></div><label class="volume-label"><span aria-hidden="true">Volume</span><input type="range" id="volume" aria-label="Speaker volume" min="0" max="100" value="50"></label></div>
+ <div class="queue-heading" id="library"><span class="eyebrow">Library</span><span class="mono" id="queueCount">01 TRACK</span></div><div id="queue" class="queue"></div><p id="libraryStatus" class="library-status" role="status">Loading saved audio…</p>
+ <div class="drop-hint" id="dropArea">Drop songs here</div>
+</section>
+<section class="panel camera-panel" id="cameraPanel" hidden>
+ <div class="panel-top"><span class="eyebrow">Right arm</span></div>
+ <div class="camera-view"><video id="cameraVideo" autoplay muted playsinline></video><canvas id="cameraOverlay" aria-label="Person bounding box and anatomical right-arm tracking overlay"></canvas></div>
+ <p id="cameraStatus" role="status">Camera off</p>
+ <div class="camera-actions"><button id="startCamera" class="button">Start camera</button><button id="stopCamera" class="button secondary">Stop camera</button><button id="calibrateArm" class="button secondary" disabled>Recenter</button><button id="followArm" class="button" disabled>Enable motors</button></div>
+ <p id="followStatus" role="status">Not following</p>
+ <div class="camera-options"><label><input type="checkbox" id="invertArmPan"> Reverse left/right</label><label><input type="checkbox" id="invertArmTilt"> Reverse up/down</label></div>
+ <p class="camera-help">Wave your right arm. Recenter to reset.</p>
+ <p class="camera-help">Tracking loss stops motors.</p>
+</section>
+<section class="panel output-panel">
+ <div class="panel-top"><span class="eyebrow">Lamp</span><span class="mono muted" id="outputMode" hidden>LOCAL PREVIEW</span></div>
+ <div class="model-panel"><canvas id="lampModel" tabindex="0" aria-label="3D lamp model. Drag or use arrow keys to orbit."></canvas><div class="model-toolbar"><span id="previewSource">SIMULATED OUTPUT</span><button id="resetView" class="text-button">Front view</button></div><div class="model-angles"><span id="tiltAngle">Tilt 0°</span><span id="panAngle">Pan 0°</span></div><p class="model-note">Drag to rotate.</p><label class="preview-check"><input type="checkbox" id="previewMotion" checked> Preview motion</label></div>
+ <div class="color-readout"><div id="colorSwatch" class="color-swatch" aria-label="Calculated output color"></div><div><span class="eyebrow" id="colorSource" hidden>CALCULATED COLOR</span><strong id="colorHex">#000000</strong><span id="colorRGB">RGB 0 / 0 / 0</span></div></div><div class="spectrum-header"><span class="eyebrow"></span><span class="mono" id="beatLabel">AWAITING AUDIO</span></div><canvas id="spectrum" aria-label="Live audio frequency spectrum"></canvas>
+ <div class="bands"><div><span>RED</span><strong id="bassValue">000</strong></div><div><span>GREEN</span><strong id="midValue">000</strong></div><div><span>BLUE</span><strong id="trebleValue">000</strong></div></div>
+</section>
+<section class="panel controls">
+ <div class="panel-top"><span class="eyebrow">Controls</span><div class="segmented" role="group" aria-label="Lamp control mode"><button id="musicMode" aria-pressed="true">Music</button><button id="manualMode" aria-pressed="false">Manual</button><button id="cameraMode" aria-pressed="false">Camera</button></div></div>
+ <div class="control-grid"><div class="control-col"><div class="control-title"><label for="brightness">Brightness</label><output id="brightnessOut">70%</output></div><input type="range" id="brightness" min="0" max="100" value="70"><p class="control-help"></p><div id="musicControls"><div class="control-title"><label for="sensitivity">Beat sensitivity</label><output id="sensitivityOut">50%</output></div><input type="range" id="sensitivity" min="0" max="100" value="50"><p class="control-help"></p></div><div id="manualLights" hidden><div class="rgb-controls"><label>R<input type="range" id="red" min="0" max="255" value="128" aria-label="Red output"></label><label>G<input type="range" id="green" min="0" max="255" value="128" aria-label="Green output"></label><label>B<input type="range" id="blue" min="0" max="255" value="128" aria-label="Blue output"></label></div></div></div>
+ <div class="control-col motion-col"><div class="motion-title"><div><span class="control-label">Motion</span><p class="control-help" id="motionHelp">Off / connect your lamp to enable</p></div><button id="motionToggle" class="toggle" role="switch" aria-checked="false" aria-label="Enable servo motion" disabled><span></span></button></div><div class="control-title"><label for="motionAmount">Range</label><output id="motionAmountOut">±30° (60° total)</output></div><input type="range" id="motionAmount" min="50" max="450" value="300" step="10"><p class="control-help">90° maximum</p><div class="control-title"><label for="holdTime">Beat hold</label><output id="holdTimeOut">300 ms</output></div><input id="holdTime" type="range" min="100" max="1000" value="300" step="20"><div class="control-title"><label for="slewRate">Speed</label><output id="slewRateOut">1000 µs/s</output></div><input id="slewRate" type="range" min="100" max="2000" value="1000" step="100"><div class="control-title"><label for="beatGap">Beat gap</label><output id="beatGapOut">280 ms</output></div><input id="beatGap" type="range" min="150" max="1000" value="280" step="10"><div class="position-controls" id="positions" hidden><label>Servo 1 <output id="servo1Out">1500 µs</output><input id="servo1" aria-label="Servo 1 position" type="range" min="1200" max="1800" value="1500" step="10"></label><label>Servo 2 <output id="servo2Out">1500 µs</output><input id="servo2" aria-label="Servo 2 position" type="range" min="1200" max="1800" value="1500" step="10"></label><button id="center" class="text-button">Center both</button></div></div></div>
+ <div class="control-footer"><span id="controlNote" hidden>Audio preview works without a lamp. Connect over USB for physical output.</span><button id="stop" class="button stop-button">Stop all</button></div>
+</section>
+</div>
+<footer><span> <span id="footerStatus" hidden>Audio stays local. No account needed.</span></span></footer>
+<div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+</main></div>
+
+<script type="module" src="app.js"></script>
+</body></html>
